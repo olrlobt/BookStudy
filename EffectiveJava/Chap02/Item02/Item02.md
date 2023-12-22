@@ -390,6 +390,65 @@ Pizza pizza = new Pizza()
 객체의 불변성과 객체의 완전성은 보장되지 않는다.
 
 
+
+## Lombok에서의 Builder 구현
+
+Lombok에서는 Builder를 쉽게 만들 수 있는 어노테이션을 제공하고 있다.
+
+
+@Builder
+```java
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class Pizza {
+    private final String dough;
+    private final String sauce;
+    private final String topping;
+    private final int hotSauce;
+    private final int cheeseSauce;
+}
+```
+
+@Builder 어노테이션을 이요하여 손쉽게 Builder를 구현할 수 있고,
+
+```java
+Pizza pizza = Pizza.builder()
+                   .dough("씬")
+                   .sauce("바베큐")
+                   .topping("페퍼로니")
+                   .hotSauce(5)
+                   .cheeseSauce(3)
+                   .build();
+```
+
+앞서 설명했던 것과 똑같이 사용할 수 있다.
+
+@Builder를 사용하면서 추가로 설정할 수 있는 대표적인 설정들은 아래와 같다.
+
+```java
+@Builder // ()안에 설정을 추가한다.
+@Builder(builderMethodName = "customBuilder") // 기본 빌더 메서드 이름을 변경한다.
+@Builder(buildMethodName = "createInstance") // build() 메서드 이름을 변경한다.
+@Builder(toBuilder = true) // true로 설정 시, 해당 객체의 현재 상태를 기반으로 새로운 빌더를 반환하는 toBuilder 메서드를 추가한다. 
+public class Pizza {
+    private final String dough;
+    private final String sauce;
+//    private final String topping;
+    private final int hotSauce;
+    private final int cheeseSauce;
+    @Singular // 해당 필드에 대한 빌더 메소드가 컬렉션을 통째로 넘기는 것이 아닌, 아이템을 하나씩 넘기는 방식으로 변경된다.
+    private List<String> toppings;
+}
+```
+
+
+
+
+
+
 ---
 
 빌더 패턴은 객체를 만들기 위해서 빌더부터 만들어야 한다.\
